@@ -26,9 +26,17 @@ export default function Home() {
         .select('*', { count: 'exact', head: true })
         .eq('received_feedback', false)
 
+      // Ghosting real = nunca hubo respuesta a la candidatura,
+      // distinto de "no feedback" (que puede incluir procesos donde
+      // sí respondieron pero no dieron un cierre final).
+      const { count: noResponseCount } = await supabase
+        .from('reviews')
+        .select('*', { count: 'exact', head: true })
+        .eq('received_response', false)
+
       setStats({
         noFeedback: noFeedbackCount || 0,
-        ghosting: Math.round(((noFeedbackCount || 0) / (count || 1)) * 100)
+        ghosting: Math.round(((noResponseCount || 0) / (count || 1)) * 100)
       })
     }
 
@@ -122,21 +130,24 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Prueba social */}
-          <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-3xl mx-auto">
-            <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-blue-600">{totalReviews}+</div>
-              <div className="text-sm sm:text-base text-gray-600">Experiencias compartidas</div>
+          {/* Prueba social — solo se muestra con masa crítica de datos, */}
+          {/* un contador en cero mata la confianza en vez de generarla. */}
+          {totalReviews >= 20 && (
+            <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-3xl mx-auto">
+              <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-blue-600">{totalReviews}+</div>
+                <div className="text-sm sm:text-base text-gray-600">Experiencias compartidas</div>
+              </div>
+              <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-red-600">{stats.noFeedback}</div>
+                <div className="text-sm sm:text-base text-gray-600">No recibieron feedback</div>
+              </div>
+              <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-orange-600">{stats.ghosting}%</div>
+                <div className="text-sm sm:text-base text-gray-600">Ghosteados</div>
+              </div>
             </div>
-            <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-red-600">{stats.noFeedback}</div>
-              <div className="text-sm sm:text-base text-gray-600">No recibieron feedback</div>
-            </div>
-            <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-orange-600">{stats.ghosting}%</div>
-              <div className="text-sm sm:text-base text-gray-600">Ghosteados</div>
-            </div>
-          </div>
+          )}
 
           {/* Cómo funciona */}
           <div className="mt-16 sm:mt-20">

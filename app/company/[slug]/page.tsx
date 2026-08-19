@@ -4,6 +4,12 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
+import {
+  calculateCompanyStats,
+  getScoreColor,
+  MIN_REVIEWS_FOR_SCORE,
+  type CompanyStats,
+} from '@/lib/scoring'
 
 interface Review {
   id: string
@@ -22,23 +28,37 @@ interface Review {
   created_at: string
 }
 
-interface CompanyStats {
-  totalReviews: number
-  avgCommunication: number
-  avgClarity: number
-  avgRespect: number
-  avgOverall: number
-  responseRate: number
-  feedbackRate: number
-  ghostingRate: number
-  reapplyRate: number
-  commonDuration: string
+const scoreColorClasses = {
+  green: { bg: 'bg-green-50', ring: 'ring-green-200', text: 'text-green-700' },
+  amber: { bg: 'bg-amber-50', ring: 'ring-amber-200', text: 'text-amber-700' },
+  red: { bg: 'bg-red-50', ring: 'ring-red-200', text: 'text-red-700' },
+}
+
+function ScoreCircle({ score }: { score: number | null }) {
+  if (score === null) {
+    return (
+      <div className="flex flex-col items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gray-100 ring-4 ring-gray-50 flex-shrink-0">
+        <span className="text-xs text-gray-400 text-center px-1">Sin score aún</span>
+      </div>
+    )
+  }
+
+  const color = scoreColorClasses[getScoreColor(score)]
+
+  return (
+    <div
+      className={`flex flex-col items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full ${color.bg} ring-4 ${color.ring} flex-shrink-0`}
+    >
+      <span className={`text-2xl sm:text-3xl font-bold ${color.text}`}>{score}</span>
+      <span className={`text-[10px] sm:text-xs ${color.text}`}>/100</span>
+    </div>
+  )
 }
 
 export default function CompanyPage() {
   const params = useParams()
   const companyName = decodeURIComponent(params.slug as string)
-  
+
   const [reviews, setReviews] = useState<Review[]>([])
   const [stats, setStats] = useState<CompanyStats | null>(null)
   const [loading, setLoading] = useState(true)
@@ -64,41 +84,7 @@ export default function CompanyPage() {
         }
 
         setReviews(reviewsData || [])
-
-        if (reviewsData && reviewsData.length > 0) {
-          const total = reviewsData.length
-          
-          const avgComm = reviewsData.reduce((sum, r) => sum + r.rating_communication, 0) / total
-          const avgClar = reviewsData.reduce((sum, r) => sum + r.rating_clarity, 0) / total
-          const avgResp = reviewsData.reduce((sum, r) => sum + r.rating_respect, 0) / total
-          
-          const responded = reviewsData.filter(r => r.received_response).length
-          const feedback = reviewsData.filter(r => r.received_feedback).length
-          const ghosted = reviewsData.filter(r => !r.received_response && !r.received_feedback).length
-          const reapply = reviewsData.filter(r => r.would_reapply).length
-
-          const durations = reviewsData.reduce((acc: any, r) => {
-            acc[r.process_duration] = (acc[r.process_duration] || 0) + 1
-            return acc
-          }, {})
-          const commonDuration = Object.keys(durations).reduce((a, b) => 
-            durations[a] > durations[b] ? a : b
-          )
-
-          setStats({
-            totalReviews: total,
-            avgCommunication: Math.round(avgComm * 10) / 10,
-            avgClarity: Math.round(avgClar * 10) / 10,
-            avgRespect: Math.round(avgResp * 10) / 10,
-            avgOverall: Math.round((avgComm + avgClar + avgResp) / 3 * 10) / 10,
-            responseRate: Math.round((responded / total) * 100),
-            feedbackRate: Math.round((feedback / total) * 100),
-            ghostingRate: Math.round((ghosted / total) * 100),
-            reapplyRate: Math.round((reapply / total) * 100),
-            commonDuration: commonDuration
-          })
-        }
-
+        setStats(calculateCompanyStats(reviewsData || []))
       } catch (err) {
         console.error('Error:', err)
         setError('Error al cargar los datos')
@@ -137,22 +123,33 @@ export default function CompanyPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-6 sm:py-8 px-4">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
+        {/* Header con score */}
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold break-words">{companyName}</h1>
-              <p className="text-sm sm:text-base text-gray-500">
-                {stats?.totalReviews || 0} experiencias compartidas
-              </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <ScoreCircle score={stats?.score ?? null} />
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold break-words">{companyName}</h1>
+                <p className="text-sm sm:text-base text-gray-500">
+                  {stats?.totalReviews || 0} experiencias compartidas
+                </p>
+              </div>
             </div>
             <Link
               href="/review/new"
-              className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition text-center text-sm sm:text-base"
+              className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition text-center text-sm sm:text-base whitespace-nowrap"
             >
               Compartir experiencia
             </Link>
           </div>
+
+          {stats && stats.score === null && stats.totalReviews > 0 && (
+            <p className="mt-4 text-xs sm:text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
+              Todavía no mostramos un score para {companyName} — necesitamos al menos{' '}
+              {MIN_REVIEWS_FOR_SCORE} experiencias para que el número sea representativo
+              (llevamos {stats.totalReviews}).
+            </p>
+          )}
 
           {/* Stats - KPIs visuales */}
           {stats && stats.totalReviews > 0 ? (
@@ -161,37 +158,46 @@ export default function CompanyPage() {
                 <div className="text-xl sm:text-2xl font-bold text-blue-600">
                   {stats.responseRate}%
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600">📩 Respuesta recibida</div>
+                <div className="text-xs sm:text-sm text-gray-600">Respuesta recibida</div>
               </div>
               <div className="bg-green-50 p-3 sm:p-4 rounded-lg text-center">
                 <div className="text-xl sm:text-2xl font-bold text-green-600">
                   {stats.feedbackRate}%
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600">💬 Feedback final</div>
+                <div className="text-xs sm:text-sm text-gray-600">Feedback final</div>
               </div>
               <div className="bg-red-50 p-3 sm:p-4 rounded-lg text-center">
                 <div className="text-xl sm:text-2xl font-bold text-red-600">
                   {stats.ghostingRate}%
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600">👻 Ghosting</div>
+                <div className="text-xs sm:text-sm text-gray-600">Ghosting</div>
               </div>
               <div className="bg-purple-50 p-3 sm:p-4 rounded-lg text-center">
                 <div className="text-sm sm:text-xl font-bold text-purple-600">
                   {stats.commonDuration}
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600">⏱ Duración más común</div>
+                <div className="text-xs sm:text-sm text-gray-600">Duración más común</div>
               </div>
             </div>
           ) : (
             <div className="mt-6 p-6 sm:p-8 bg-gray-50 rounded-lg text-center">
-              <p className="text-gray-500 text-sm sm:text-base">No hay experiencias aún para {companyName}</p>
+              <p className="text-gray-500 text-sm sm:text-base">
+                No hay experiencias aún para {companyName}
+              </p>
               <Link
                 href="/review/new"
                 className="inline-block mt-3 px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition text-sm sm:text-base"
               >
-                👉 Sé el primero en compartir tu experiencia
+                Sé el primero en compartir tu experiencia
               </Link>
             </div>
+          )}
+
+          {stats && stats.totalReviews > 0 && (
+            <p className="mt-4 text-xs text-gray-400">
+              El score pondera respuesta (25%), feedback (25%), si volverían a aplicar (20%),
+              valoraciones (20%) y duración del proceso (10%).
+            </p>
           )}
         </div>
 
@@ -201,15 +207,21 @@ export default function CompanyPage() {
             <h2 className="text-base sm:text-lg font-semibold mb-4">Valoración media</h2>
             <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
               <div>
-                <div className="text-xl sm:text-2xl font-bold text-yellow-500">★ {stats.avgCommunication}</div>
+                <div className="text-xl sm:text-2xl font-bold text-yellow-500">
+                  ★ {stats.avgCommunication}
+                </div>
                 <div className="text-xs sm:text-sm text-gray-600">Comunicación</div>
               </div>
               <div>
-                <div className="text-xl sm:text-2xl font-bold text-yellow-500">★ {stats.avgClarity}</div>
+                <div className="text-xl sm:text-2xl font-bold text-yellow-500">
+                  ★ {stats.avgClarity}
+                </div>
                 <div className="text-xs sm:text-sm text-gray-600">Claridad</div>
               </div>
               <div>
-                <div className="text-xl sm:text-2xl font-bold text-yellow-500">★ {stats.avgRespect}</div>
+                <div className="text-xl sm:text-2xl font-bold text-yellow-500">
+                  ★ {stats.avgRespect}
+                </div>
                 <div className="text-xs sm:text-sm text-gray-600">Respeto</div>
               </div>
             </div>
@@ -219,7 +231,7 @@ export default function CompanyPage() {
         {/* Lista de reviews */}
         <div className="space-y-4">
           <h2 className="text-lg sm:text-xl font-bold">Experiencias recientes</h2>
-          
+
           {reviews.length === 0 ? (
             <div className="bg-white rounded-xl shadow-sm p-6 sm:p-8 text-center text-gray-500 text-sm sm:text-base">
               No hay experiencias para mostrar
@@ -229,38 +241,66 @@ export default function CompanyPage() {
               <div key={review.id} className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-base sm:text-lg break-words">{review.position}</h3>
+                    <h3 className="font-semibold text-base sm:text-lg break-words">
+                      {review.position}
+                    </h3>
                     <div className="text-xs sm:text-sm text-gray-500">
-                      {review.process_type} • Hace {new Date(review.created_at).toLocaleDateString('es-ES', { 
-                        year: 'numeric', 
-                        month: 'short', 
-                        day: 'numeric' 
+                      {review.process_type} • Hace{' '}
+                      {new Date(review.created_at).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
                       })}
                     </div>
                   </div>
                   <div className="flex gap-0.5 sm:gap-1 flex-shrink-0">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <span key={star} className="text-yellow-400 text-sm sm:text-base">
-                        {star <= (review.rating_communication + review.rating_clarity + review.rating_respect) / 3 ? '★' : '☆'}
+                        {star <=
+                        (review.rating_communication +
+                          review.rating_clarity +
+                          review.rating_respect) /
+                          3
+                          ? '★'
+                          : '☆'}
                       </span>
                     ))}
                   </div>
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm">
-                  <span className={`px-2 py-1 rounded-full ${review.received_response ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                  <span
+                    className={`px-2 py-1 rounded-full ${
+                      review.received_response
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
+                    }`}
+                  >
                     {review.received_response ? '✔ Respuesta' : '✖ Sin respuesta'}
                   </span>
-                  <span className={`px-2 py-1 rounded-full ${review.received_feedback ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                  <span
+                    className={`px-2 py-1 rounded-full ${
+                      review.received_feedback
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
+                    }`}
+                  >
                     {review.received_feedback ? '✔ Feedback' : '✖ Sin feedback'}
                   </span>
                   <span className="px-2 py-1 bg-gray-100 rounded-full">
-                    {review.interview_count === 4 ? '4+' : review.interview_count} entrevistas
+                    {review.interview_count === 4 ? '4+' : review.interview_count}{' '}
+                    {review.interview_count === 1 ? 'entrevista' : 'entrevistas'}
                   </span>
                   <span className="px-2 py-1 bg-gray-100 rounded-full">
                     {review.process_duration}
                   </span>
-                  <span className={`px-2 py-1 rounded-full ${review.would_reapply ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                  <span
+                    className={`px-2 py-1 rounded-full ${
+                      review.would_reapply
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
+                    }`}
+                  >
                     {review.would_reapply ? '👍 Volvería a aplicar' : '👎 No volvería a aplicar'}
                   </span>
                 </div>

@@ -20,18 +20,22 @@ const prohibitedWords = [
 ]
 
 // Función para validar texto (definida UNA SOLA VEZ)
+// Usa límites de palabra (\b) en vez de "includes" para evitar falsos positivos
+// como bloquear "fiasco" por contener la subcadena "asco".
 const validateText = (text: string): { valid: boolean; message: string } => {
   const lowerText = text.toLowerCase()
-  
+
   for (const word of prohibitedWords) {
-    if (lowerText.includes(word)) {
+    const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const regex = new RegExp(`\\b${escaped}\\b`, 'i')
+    if (regex.test(lowerText)) {
       return {
         valid: false,
-        message: `La palabra "${word}" no está permitida. Por favor, sé respetuoso.`
+        message: 'Ese comentario incluye lenguaje no permitido. Por favor, sé respetuoso.'
       }
     }
   }
-  
+
   return { valid: true, message: '' }
 }
 
@@ -51,16 +55,17 @@ export default function NewReviewPage() {
     company: '',
     position: '',
     process_type: 'online',
-    received_response: true,
-    interview_count: 1,
-    received_feedback: true,
-    process_duration: '<1 semana',
+    received_response: null as boolean | null,
+    interview_count: null as number | null,
+    received_feedback: null as boolean | null,
+    process_duration: null as string | null,
     rating_communication: 3,
     rating_clarity: 3,
     rating_respect: 3,
-    would_reapply: true,
+    would_reapply: null as boolean | null,
     improvement_text: ''
   })
+  const [formError, setFormError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleCompanySearch = async (value: string) => {
@@ -81,7 +86,20 @@ export default function NewReviewPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
+    // 0. Validar que todos los campos estructurados obligatorios tengan respuesta explícita
+    setFormError(null)
+    if (
+      formData.received_response === null ||
+      formData.interview_count === null ||
+      formData.received_feedback === null ||
+      formData.process_duration === null ||
+      formData.would_reapply === null
+    ) {
+      setFormError('Por favor, responde a todas las preguntas antes de publicar.')
+      return
+    }
+
     // 1. Validar captcha
     if (!captchaToken) {
       setCaptchaError(true)
@@ -205,6 +223,138 @@ export default function NewReviewPage() {
             </select>
           </div>
 
+          {/* Respuesta a la candidatura */}
+          <div>
+            <label className="block text-sm font-medium mb-1">¿Recibiste respuesta a tu candidatura? *</label>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, received_response: true })}
+                className={`flex-1 py-2 rounded-lg border font-medium transition ${
+                  formData.received_response === true
+                    ? 'bg-green-600 text-white border-green-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                Sí
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, received_response: false, received_feedback: false })}
+                className={`flex-1 py-2 rounded-lg border font-medium transition ${
+                  formData.received_response === false
+                    ? 'bg-red-600 text-white border-red-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                No
+              </button>
+            </div>
+          </div>
+
+          {/* Número de entrevistas */}
+          <div>
+            <label className="block text-sm font-medium mb-1">¿Cuántas entrevistas tuviste? *</label>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setFormData({ ...formData, interview_count: n })}
+                  className={`flex-1 py-2 rounded-lg border font-medium transition ${
+                    formData.interview_count === n
+                      ? 'bg-blue-600 text-white border-blue-600'
+                      : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                  }`}
+                >
+                  {n === 4 ? '4+' : n}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Feedback final */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              ¿Recibiste feedback final (te dijeron si seguías o no en el proceso)? *
+            </label>
+            {formData.received_response === false ? (
+              <p className="text-sm text-gray-500 italic">
+                Marcado automáticamente como "No" — no puede haber feedback si no hubo respuesta.
+              </p>
+            ) : (
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, received_feedback: true })}
+                  className={`flex-1 py-2 rounded-lg border font-medium transition ${
+                    formData.received_feedback === true
+                      ? 'bg-green-600 text-white border-green-600'
+                      : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                  }`}
+                >
+                  Sí
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, received_feedback: false })}
+                  className={`flex-1 py-2 rounded-lg border font-medium transition ${
+                    formData.received_feedback === false
+                      ? 'bg-red-600 text-white border-red-600'
+                      : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                  }`}
+                >
+                  No
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Duración del proceso */}
+          <div>
+            <label className="block text-sm font-medium mb-1">¿Cuánto duró el proceso? *</label>
+            <select
+              className="w-full px-4 py-2 border rounded-lg"
+              value={formData.process_duration ?? ''}
+              onChange={(e) => setFormData({ ...formData, process_duration: e.target.value })}
+            >
+              <option value="" disabled>Selecciona una duración</option>
+              <option value="<1 semana">Menos de 1 semana</option>
+              <option value="1-2 semanas">1-2 semanas</option>
+              <option value="2-4 semanas">2-4 semanas</option>
+              <option value="+1 mes">Más de 1 mes</option>
+            </select>
+          </div>
+
+          {/* Volvería a aplicar */}
+          <div>
+            <label className="block text-sm font-medium mb-1">¿Volverías a aplicar a esta empresa? *</label>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, would_reapply: true })}
+                className={`flex-1 py-2 rounded-lg border font-medium transition ${
+                  formData.would_reapply === true
+                    ? 'bg-green-600 text-white border-green-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                Sí
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, would_reapply: false })}
+                className={`flex-1 py-2 rounded-lg border font-medium transition ${
+                  formData.would_reapply === false
+                    ? 'bg-red-600 text-white border-red-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                No
+              </button>
+            </div>
+          </div>
+
           {/* Valoraciones */}
           <div className="space-y-2">
             <h3 className="font-medium">Valoración</h3>
@@ -311,6 +461,12 @@ export default function NewReviewPage() {
           {captchaError && (
             <p className="text-red-500 text-sm text-center">
               Por favor, completa el captcha para continuar
+            </p>
+          )}
+
+          {formError && (
+            <p className="text-red-500 text-sm text-center font-medium">
+              {formError}
             </p>
           )}
 
