@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Turnstile } from '@marsidev/react-turnstile'
 import { supabase } from '@/lib/supabase/client'
 import { resolveCanonicalCompanyName } from '@/lib/companies'
+import { hashEmail, isValidEmailFormat } from '@/lib/emailHash'
+import { checkSpamCooldown, recordVerification } from '@/lib/antiSpam'
 
 // ============================================
 // VALIDACIÓN ANTI-TOXICIDAD (FUERA DEL COMPONENTE)
@@ -51,6 +53,9 @@ export default function NewReviewPage() {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const [captchaError, setCaptchaError] = useState(false)
   const [textError, setTextError] = useState<string | null>(null)
+  const [email, setEmail] = useState('')
+  const [emailConsent, setEmailConsent] = useState(false)
+  const [emailError, setEmailError] = useState<string | null>(null)
   
   const [formData, setFormData] = useState({
     company: '',
@@ -90,6 +95,18 @@ export default function NewReviewPage() {
 
     // 0. Validar que todos los campos estructurados obligatorios tengan respuesta explícita
     setFormError(null)
+    setEmailError(null)
+
+    if (!isValidEmailFormat(email)) {
+      setEmailError('Introduce un email válido. Solo se usa para evitar spam, nunca se publica.')
+      return
+    }
+
+    if (!emailConsent) {
+      setEmailError('Necesitamos tu consentimiento para usar el email únicamente contra el spam.')
+      return
+    }
+
     if (
       formData.received_response === null ||
       formData.interview_count === null ||
@@ -142,7 +159,7 @@ export default function NewReviewPage() {
     }
 
     // 4. Resolver el nombre canónico de la empresa (evita duplicados por
-    //    espacios o mayúsculas/minúsculas) y guardar la review
+    //    espacios o mayúsculas/minúsculas)
     let canonicalCompany: string
     try {
       canonicalCompany = await resolveCanonicalCompanyName(formData.company)
@@ -151,14 +168,34 @@ export default function NewReviewPage() {
       canonicalCompany = formData.company.trim()
     }
 
+    // 5. Hash del email (nunca se guarda en texto plano) y comprobación
+    //    anti-spam: ¿este email ya reseñó esta empresa recientemente?
+    const emailHashValue = await hashEmail(email)
+    const spamCheck = await checkSpamCooldown(emailHashValue, canonicalCompany)
+
+    if (spamCheck.blocked) {
+      setEmailError(spamCheck.reason || 'No se puede publicar esta review.')
+      setIsSubmitting(false)
+      return
+    }
+
+    // 6. Guardar la review (nunca incluye el email)
     const normalizedData = {
       ...formData,
       company: canonicalCompany
     }
 
-    const { error } = await supabase
+    const { data: insertedReview, error } = await supabase
       .from('reviews')
       .insert([normalizedData])
+      .select('id')
+      .single()
+
+    // 7. Registrar la verificación (solo el hash) en su propia tabla,
+    //    separada de la review pública
+    if (!error && insertedReview) {
+      await recordVerification(insertedReview.id, canonicalCompany, emailHashValue)
+    }
 
     setIsSubmitting(false)
 
@@ -446,6 +483,51 @@ export default function NewReviewPage() {
             </div>
           </div>
 
+          {/* Email — privado, solo anti-spam, nunca se publica */}
+          <div className="border-t pt-4">
+            <label className="block text-sm font-medium mb-1">Tu email *</label>
+            <input
+              type="email"
+              className={`w-full px-4 py-2 border rounded-lg ${
+                emailError ? 'border-red-500 bg-red-50' : 'border-gray-300'
+              }`}
+              placeholder="tu@email.com"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                setEmailError(null)
+              }}
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Nunca se muestra públicamente. Solo se usa, de forma encriptada, para evitar
+              reviews duplicadas o falsas de la misma empresa.
+            </p>
+
+            <label className="flex items-start gap-2 mt-3 text-sm text-gray-700">
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={emailConsent}
+                onChange={(e) => {
+                  setEmailConsent(e.target.checked)
+                  setEmailError(null)
+                }}
+              />
+              <span>
+                Acepto que mi email se use exclusivamente para prevenir spam, tal y como se
+                describe en la{' '}
+                <a href="/privacy" target="_blank" className="text-blue-600 hover:underline">
+                  Política de Privacidad
+                </a>
+                . No se publicará ni se compartirá con nadie. *
+              </span>
+            </label>
+
+            {emailError && (
+              <p className="text-red-500 text-sm mt-2 font-medium">{emailError}</p>
+            )}
+          </div>
+
           {/* Captcha */}
           <div className="flex justify-center my-4">
             <Turnstile
@@ -479,6 +561,14 @@ export default function NewReviewPage() {
               {formError}
             </p>
           )}
+
+          <p className="text-xs text-gray-500 text-center">
+            Al publicar, aceptas nuestros{' '}
+            <a href="/terms" target="_blank" className="text-blue-600 hover:underline">
+              Términos de Servicio
+            </a>
+            . Solo hechos verificables — nada de insultos ni acusaciones.
+          </p>
 
           <button
             type="submit"

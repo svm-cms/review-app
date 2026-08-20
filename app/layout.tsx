@@ -93,6 +93,10 @@ export default function RootLayout({
               Política de Privacidad
             </Link>
             <span className="mx-2">•</span>
+            <Link href="/terms" className="hover:text-gray-700 transition">
+              Términos de Servicio
+            </Link>
+            <span className="mx-2">•</span>
             <span>Review de Procesos de Selección</span>
           </div>
         </footer>

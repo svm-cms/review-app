@@ -29,33 +29,53 @@ export default function PrivacyPage() {
 
           <h2 className="text-xl font-semibold text-gray-900 mt-6">2. Anonimato</h2>
           <p>
-            Todas las reviews son <strong>completamente anónimas</strong>. No recopilamos:
+            Todas las reviews son <strong>anónimas de cara al público</strong>. Nunca mostramos
+            tu nombre ni tu email junto a tu experiencia. No recopilamos:
           </p>
           <ul className="list-disc pl-6 space-y-1">
             <li>Nombre de usuario</li>
-            <li>Correo electrónico</li>
             <li>Dirección IP (anonimizada)</li>
-            <li>Información personal identificable</li>
+            <li>Información personal identificable visible públicamente</li>
           </ul>
 
-          <h2 className="text-xl font-semibold text-gray-900 mt-6">3. Uso de los datos</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mt-6">3. Sobre el email que pedimos</h2>
+          <p>
+            Al publicar una review te pedimos un email, con tu consentimiento explícito, única y
+            exclusivamente para evitar spam y reviews duplicadas o falsas sobre la misma empresa.
+          </p>
+          <ul className="list-disc pl-6 space-y-1">
+            <li>
+              Tu email se convierte en un código encriptado (hash) en tu propio navegador antes
+              de enviarse — nunca guardamos el email en texto plano, ni siquiera nosotros podemos
+              leerlo.
+            </li>
+            <li>Ese código se guarda en una tabla separada de las reviews públicas, nunca junto a tu opinión.</li>
+            <li>No se usa para marketing, no se comparte con terceros y no se vende.</li>
+            <li>
+              Puedes solicitar en cualquier momento que eliminemos ese registro escribiéndonos —
+              esto no afecta a la review pública, que permanece anónima.
+            </li>
+          </ul>
+
+          <h2 className="text-xl font-semibold text-gray-900 mt-6">4. Uso de los datos</h2>
           <p>Los datos se utilizan para:</p>
           <ul className="list-disc pl-6 space-y-1">
             <li>Mostrar experiencias de procesos de selección</li>
             <li>Calcular estadísticas agregadas (porcentajes, promedios)</li>
+            <li>Prevenir spam y reviews duplicadas (mediante el email encriptado)</li>
             <li>Mejorar la transparencia en el hiring</li>
           </ul>
 
-          <h2 className="text-xl font-semibold text-gray-900 mt-6">4. Cookies</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mt-6">5. Cookies</h2>
           <p>
             Esta web utiliza cookies técnicas para el funcionamiento básico.
             No utilizamos cookies de rastreo ni publicitarias.
           </p>
 
-          <h2 className="text-xl font-semibold text-gray-900 mt-6">5. Tus derechos</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mt-6">6. Tus derechos</h2>
           <p>
-            Puedes solicitar la eliminación de tu review en cualquier momento
-            contactándonos a través del formulario de contacto.
+            Puedes solicitar la eliminación de tu review o del registro de verificación asociado
+            en cualquier momento contactándonos a través del formulario de contacto.
           </p>
 
           <div className="mt-8 p-4 bg-gray-50 rounded-lg text-sm text-gray-500">
