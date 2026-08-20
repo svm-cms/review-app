@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Turnstile } from '@marsidev/react-turnstile'
 import { supabase } from '@/lib/supabase/client'
+import { resolveCanonicalCompanyName } from '@/lib/companies'
 
 // ============================================
 // VALIDACIÓN ANTI-TOXICIDAD (FUERA DEL COMPONENTE)
@@ -140,10 +141,19 @@ export default function NewReviewPage() {
       return
     }
 
-    // 4. Normalizar y guardar la review
+    // 4. Resolver el nombre canónico de la empresa (evita duplicados por
+    //    espacios o mayúsculas/minúsculas) y guardar la review
+    let canonicalCompany: string
+    try {
+      canonicalCompany = await resolveCanonicalCompanyName(formData.company)
+    } catch (err) {
+      console.error('Error resolviendo nombre de empresa:', err)
+      canonicalCompany = formData.company.trim()
+    }
+
     const normalizedData = {
       ...formData,
-      company: formData.company.charAt(0).toUpperCase() + formData.company.slice(1).toLowerCase()
+      company: canonicalCompany
     }
 
     const { error } = await supabase
