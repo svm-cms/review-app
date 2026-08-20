@@ -5,6 +5,39 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 
 export default function Home() {
+  const faqItems = [
+    {
+      question: '¿Las reviews son anónimas?',
+      answer:
+        'Sí, siempre de cara al público. Pedimos un email solo para evitar spam y reviews duplicadas — se convierte en un código encriptado antes de guardarse y nunca se muestra ni se publica.',
+    },
+    {
+      question: '¿Cómo evitáis reviews falsas?',
+      answer:
+        'Filtramos lenguaje ofensivo automáticamente, limitamos el texto libre a comentarios breves y estructurados, y bloqueamos que el mismo email publique varias reviews sobre la misma empresa en poco tiempo.',
+    },
+    {
+      question: '¿Puede una empresa responder a una review?',
+      answer:
+        'Todavía no — es una función que tenemos en el roadmap. Por ahora, si una empresa considera que una review incumple las normas, puede contactarnos para que la revisemos.',
+    },
+    {
+      question: '¿Puedo modificar o eliminar mi review?',
+      answer:
+        'De momento no hay autoservicio para editar o borrar directamente. Escríbenos y lo gestionamos manualmente lo antes posible.',
+    },
+    {
+      question: '¿Se pueden publicar comentarios negativos?',
+      answer:
+        'Sí, siempre que describan hechos verificables de tu experiencia real (plazos, respuesta, feedback) — no insultos ni acusaciones sin base.',
+    },
+    {
+      question: '¿Cómo se calcula el score de una empresa?',
+      answer:
+        'Combinamos 5 señales con distinto peso: respuesta recibida (25%), feedback final (25%), si volverías a aplicar (20%), valoraciones (20%) y duración del proceso (10%). Solo se muestra a partir de 5 experiencias.',
+    },
+  ]
+
   const [searchTerm, setSearchTerm] = useState('')
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [totalReviews, setTotalReviews] = useState(0)
@@ -78,6 +111,11 @@ export default function Home() {
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8">
               Descubre experiencias reales de candidatos (sin toxicidad, solo datos útiles)
+            </p>
+
+            <p className="text-sm sm:text-base text-gray-500 italic mb-6 sm:mb-8 max-w-xl mx-auto">
+              Los candidatos invierten tiempo e ilusión en cada proceso. Creemos que merecen
+              saber, antes de empezar, cómo trata esa empresa a quien aplica.
             </p>
 
             {/* Buscador */}
@@ -170,6 +208,125 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          {/* Cómo se valora */}
+          <div className="mt-16 sm:mt-20">
+            <h2 className="text-xl sm:text-2xl font-bold text-center mb-2">
+              ¿Cómo se valora un proceso? ⭐
+            </h2>
+            <p className="text-center text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-xl mx-auto">
+              No es una web para criticar empresas. El score sale de 5 datos objetivos, con
+              distinto peso cada uno.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
+              <div className="bg-white p-3 sm:p-4 rounded-xl shadow-sm text-center">
+                <div className="text-xl sm:text-2xl mb-1">📩</div>
+                <div className="font-bold text-blue-600 text-sm sm:text-base">25%</div>
+                <div className="text-xs sm:text-sm text-gray-600">Respuesta</div>
+              </div>
+              <div className="bg-white p-3 sm:p-4 rounded-xl shadow-sm text-center">
+                <div className="text-xl sm:text-2xl mb-1">💬</div>
+                <div className="font-bold text-blue-600 text-sm sm:text-base">25%</div>
+                <div className="text-xs sm:text-sm text-gray-600">Feedback</div>
+              </div>
+              <div className="bg-white p-3 sm:p-4 rounded-xl shadow-sm text-center">
+                <div className="text-xl sm:text-2xl mb-1">🔄</div>
+                <div className="font-bold text-blue-600 text-sm sm:text-base">20%</div>
+                <div className="text-xs sm:text-sm text-gray-600">Volvería a aplicar</div>
+              </div>
+              <div className="bg-white p-3 sm:p-4 rounded-xl shadow-sm text-center">
+                <div className="text-xl sm:text-2xl mb-1">🌟</div>
+                <div className="font-bold text-blue-600 text-sm sm:text-base">20%</div>
+                <div className="text-xs sm:text-sm text-gray-600">Valoraciones</div>
+              </div>
+              <div className="bg-white p-3 sm:p-4 rounded-xl shadow-sm text-center">
+                <div className="text-xl sm:text-2xl mb-1">⏱️</div>
+                <div className="font-bold text-blue-600 text-sm sm:text-base">10%</div>
+                <div className="text-xs sm:text-sm text-gray-600">Duración</div>
+              </div>
+            </div>
+            <p className="text-center text-xs text-gray-400 mt-4">
+              El score solo se muestra a partir de 5 experiencias por empresa, para que sea representativo.
+            </p>
+          </div>
+
+          {/* Para candidatos / Para empresas */}
+          <div className="mt-16 sm:mt-20 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white p-5 sm:p-6 rounded-xl shadow-sm">
+              <div className="text-2xl sm:text-3xl mb-2">👤</div>
+              <h3 className="text-lg sm:text-xl font-bold mb-3">Para candidatos</h3>
+              <ul className="space-y-2 text-sm sm:text-base text-gray-600">
+                <li>✓ Saber qué esperar antes de aplicar</li>
+                <li>✓ Comparar procesos entre empresas</li>
+                <li>✓ Compartir tu experiencia y ayudar a otros candidatos</li>
+              </ul>
+            </div>
+            <div className="bg-white p-5 sm:p-6 rounded-xl shadow-sm">
+              <div className="text-2xl sm:text-3xl mb-2">🏢</div>
+              <h3 className="text-lg sm:text-xl font-bold mb-3">Para empresas</h3>
+              <p className="text-sm sm:text-base text-gray-600 mb-3">
+                La transparencia también ayuda a las empresas a mejorar sus procesos de selección.
+              </p>
+              <ul className="space-y-2 text-sm sm:text-base text-gray-600">
+                <li>✓ Ver cómo perciben los candidatos vuestro proceso</li>
+                <li>✓ Detectar qué mejorar antes de que impacte en la marca empleadora</li>
+                <li className="text-gray-400">✓ Panel de analytics — próximamente</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Principios */}
+          <div className="mt-16 sm:mt-20">
+            <h2 className="text-xl sm:text-2xl font-bold text-center mb-6">Nuestros principios</h2>
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+              <span className="px-3 sm:px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-xs sm:text-sm font-medium">
+                📊 Datos antes que opiniones
+              </span>
+              <span className="px-3 sm:px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-xs sm:text-sm font-medium">
+                ✅ Experiencias reales
+              </span>
+              <span className="px-3 sm:px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-xs sm:text-sm font-medium">
+                🚫 Sin ataques personales
+              </span>
+              <span className="px-3 sm:px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-xs sm:text-sm font-medium">
+                🤝 Transparencia para candidatos y empresas
+              </span>
+            </div>
+          </div>
+
+          {/* FAQ */}
+          <div className="mt-16 sm:mt-20 max-w-2xl mx-auto">
+            <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8">
+              Preguntas frecuentes
+            </h2>
+            <div className="space-y-3">
+              {faqItems.map((item) => (
+                <div key={item.question} className="bg-white p-4 sm:p-5 rounded-xl shadow-sm">
+                  <h3 className="font-semibold text-sm sm:text-base mb-1.5">{item.question}</h3>
+                  <p className="text-sm sm:text-base text-gray-600">{item.answer}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Datos estructurados para Google (FAQ) */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'FAQPage',
+                mainEntity: faqItems.map((item) => ({
+                  '@type': 'Question',
+                  name: item.question,
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: item.answer,
+                  },
+                })),
+              }),
+            }}
+          />
 
           {/* CTA final (visible en desktop) */}
           <div className="mt-16 sm:mt-20 text-center hidden md:block">
