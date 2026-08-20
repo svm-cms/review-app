@@ -19,6 +19,7 @@
 export const MIN_REVIEWS_FOR_SCORE = 5
 
 export interface ScoreableReview {
+  company: string
   received_response: boolean
   received_feedback: boolean
   would_reapply: boolean
@@ -124,4 +125,32 @@ export function getScoreColor(score: number): 'green' | 'amber' | 'red' {
   if (score >= 70) return 'green'
   if (score >= 40) return 'amber'
   return 'red'
+}
+
+export interface CompanyRanking extends CompanyStats {
+  company: string
+}
+
+// Agrupa todas las reviews por empresa y calcula el ranking. Solo incluye
+// empresas que ya alcanzan el mínimo de reviews (ver MIN_REVIEWS_FOR_SCORE) —
+// no tendría sentido "rankear" una empresa con 1 sola experiencia.
+export function rankCompanies(reviews: ScoreableReview[]): CompanyRanking[] {
+  const grouped = new Map<string, ScoreableReview[]>()
+
+  for (const review of reviews) {
+    const key = review.company
+    if (!grouped.has(key)) grouped.set(key, [])
+    grouped.get(key)!.push(review)
+  }
+
+  const rankings: CompanyRanking[] = []
+
+  for (const [company, companyReviews] of grouped) {
+    const stats = calculateCompanyStats(companyReviews)
+    if (stats && stats.score !== null) {
+      rankings.push({ company, ...stats })
+    }
+  }
+
+  return rankings.sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
 }

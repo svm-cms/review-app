@@ -48,6 +48,16 @@ export default function Header() {
               Compartir experiencia
             </Link>
             <Link
+              href="/ranking"
+              className={`text-sm font-medium transition ${
+                isActive('/ranking')
+                  ? 'text-blue-600'
+                  : 'text-gray-600 hover:text-blue-600'
+              }`}
+            >
+              Ranking
+            </Link>
+            <Link
               href="/privacy"
               className={`text-sm font-medium transition ${
                 isActive('/privacy') 
@@ -105,6 +115,17 @@ export default function Header() {
               }`}
             >
               Compartir experiencia
+            </Link>
+            <Link
+              href="/ranking"
+              onClick={() => setIsMenuOpen(false)}
+              className={`text-sm font-medium px-2 py-2 rounded-lg transition ${
+                isActive('/ranking')
+                  ? 'bg-blue-50 text-blue-600'
+                  : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              Ranking
             </Link>
             <Link
               href="/privacy"
