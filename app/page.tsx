@@ -14,7 +14,7 @@ export default function Home() {
     {
       question: '¿Cómo evitáis reviews falsas?',
       answer:
-        'Filtramos lenguaje ofensivo automáticamente, limitamos el texto libre a comentarios breves y estructurados, y bloqueamos que el mismo email publique varias reviews sobre la misma empresa en poco tiempo.',
+        'Filtramos lenguaje ofensivo automáticamente, limitamos el texto libre a comentarios breves y estructurados, y evitamos que el mismo candidato publique varias reviews sobre la misma empresa en poco tiempo.',
     },
     {
       question: '¿Puede una empresa responder a una review?',
@@ -24,7 +24,7 @@ export default function Home() {
     {
       question: '¿Puedo modificar o eliminar mi review?',
       answer:
-        'De momento no hay autoservicio para editar o borrar directamente. Escríbenos y lo gestionamos manualmente lo antes posible.',
+        'De momento no hay autoservicio para editar o borrar directamente. Escríbenos y lo gestionamos lo antes posible.',
     },
     {
       question: '¿Se pueden publicar comentarios negativos?',
@@ -34,7 +34,7 @@ export default function Home() {
     {
       question: '¿Cómo se calcula el score de una empresa?',
       answer:
-        'Combinamos 5 señales con distinto peso: respuesta recibida (25%), feedback final (25%), si volverías a aplicar (20%), valoraciones (20%) y duración del proceso (10%). Solo se muestra a partir de 5 experiencias.',
+        'Combinamos 5 variables con distinto peso: respuesta recibida (25%), feedback final (25%), si volverías a aplicar (20%), valoraciones (20%) y duración del proceso (10%). Solo se muestra a partir de 5 experiencias.',
     },
   ]
 
@@ -107,15 +107,15 @@ export default function Home() {
           {/* Hero */}
           <div className="text-center">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
-              ¿Cómo fue realmente el proceso de selección en esta empresa?
+              Antes de aplicar, entérate de cómo es realmente su proceso de selección
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8">
-              Descubre experiencias reales de candidatos (sin toxicidad, solo datos útiles)
+              Experiencias reales de candidatos — sin dramas, solo los datos que necesitas para decidir
             </p>
 
             <p className="text-sm sm:text-base text-gray-500 italic mb-6 sm:mb-8 max-w-xl mx-auto">
-              Los candidatos invierten tiempo e ilusión en cada proceso. Creemos que merecen
-              saber, antes de empezar, cómo trata esa empresa a quien aplica.
+              Cada proceso de selección cuesta tiempo e ilusión. Creemos que mereces saberlo
+              de antemano: cómo trata esa empresa a quien aplica.
             </p>
 
             {/* Buscador */}
@@ -194,7 +194,7 @@ export default function Home() {
               <div className="text-center">
                 <div className="text-3xl sm:text-4xl mb-3">🔍</div>
                 <h3 className="font-semibold mb-2 text-sm sm:text-base">Busca una empresa</h3>
-                <p className="text-sm sm:text-base text-gray-600">Encuentra la empresa que te interesa</p>
+                <p className="text-sm sm:text-base text-gray-600">Consulta su historial antes de aplicar</p>
               </div>
               <div className="text-center">
                 <div className="text-3xl sm:text-4xl mb-3">📊</div>
@@ -215,8 +215,8 @@ export default function Home() {
               ¿Cómo se valora un proceso? ⭐
             </h2>
             <p className="text-center text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-xl mx-auto">
-              No es una web para criticar empresas. El score sale de 5 datos objetivos, con
-              distinto peso cada uno.
+              Esto no es una web para criticar empresas. El score combina 5 datos objetivos,
+              cada uno con un peso distinto.
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
               <div className="bg-white p-3 sm:p-4 rounded-xl shadow-sm text-center">
@@ -246,7 +246,7 @@ export default function Home() {
               </div>
             </div>
             <p className="text-center text-xs text-gray-400 mt-4">
-              El score solo se muestra a partir de 5 experiencias por empresa, para que sea representativo.
+              El score se publica únicamente a partir de 5 experiencias por empresa, para garantizar su representatividad.
             </p>
           </div>
 
@@ -268,7 +268,7 @@ export default function Home() {
                 La transparencia también ayuda a las empresas a mejorar sus procesos de selección.
               </p>
               <ul className="space-y-2 text-sm sm:text-base text-gray-600">
-                <li>✓ Ver cómo perciben los candidatos vuestro proceso</li>
+                <li>✓ Ver cómo perciben los candidatos su proceso de selección</li>
                 <li>✓ Detectar qué mejorar antes de que impacte en la marca empleadora</li>
                 <li className="text-gray-400">✓ Panel de analytics — próximamente</li>
               </ul>
