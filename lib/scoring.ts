@@ -8,7 +8,7 @@
 //   25% — ¿Recibió respuesta a su candidatura?
 //   25% — ¿Recibió feedback final (le dijeron si seguía o no)?
 //   20% — ¿Volvería a aplicar a esta empresa?
-//   20% — Valoración media (comunicación + claridad + respeto)
+//   20% — Valoración media (comunicación + claridad del proceso + trato recibido)
 //   10% — Duración del proceso (procesos más cortos puntúan más alto)
 //
 // No usamos "interview_count" en el score: es informativo (cuántas fases

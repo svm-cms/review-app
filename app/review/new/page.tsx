@@ -419,7 +419,7 @@ export default function NewReviewPage() {
             </div>
 
             <div>
-              <label className="text-sm">Claridad: {formData.rating_clarity}★</label>
+              <label className="text-sm">Claridad durante el proceso: {formData.rating_clarity}★</label>
               <input
                 type="range"
                 min="1"
@@ -431,7 +431,7 @@ export default function NewReviewPage() {
             </div>
 
             <div>
-              <label className="text-sm">Respeto: {formData.rating_respect}★</label>
+              <label className="text-sm">Trato recibido: {formData.rating_respect}★</label>
               <input
                 type="range"
                 min="1"

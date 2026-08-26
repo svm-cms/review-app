@@ -212,13 +212,13 @@ export default function CompanyProfileClient({ companyName }: { companyName: str
                 <div className="text-xl sm:text-2xl font-bold text-yellow-500">
                   ★ {stats.avgClarity}
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600">Claridad</div>
+                <div className="text-xs sm:text-sm text-gray-600">Claridad durante el proceso</div>
               </div>
               <div>
                 <div className="text-xl sm:text-2xl font-bold text-yellow-500">
                   ★ {stats.avgRespect}
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600">Respeto</div>
+                <div className="text-xs sm:text-sm text-gray-600">Trato recibido</div>
               </div>
             </div>
           </div>
