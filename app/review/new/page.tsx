@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase/client'
 import { resolveCanonicalCompanyName } from '@/lib/companies'
 import { hashEmail, isValidEmailFormat } from '@/lib/emailHash'
 import { checkSpamCooldown, recordVerification } from '@/lib/antiSpam'
+import StarRatingInput from '@/app/components/StarRatingInput'
 
 // ============================================
 // VALIDACIÓN ANTI-TOXICIDAD (FUERA DEL COMPONENTE)
@@ -403,44 +404,26 @@ export default function NewReviewPage() {
           </div>
 
           {/* Valoraciones */}
-          <div className="space-y-2">
+          <div className="space-y-4">
             <h3 className="font-medium">Valoración</h3>
-            
-            <div>
-              <label className="text-sm">Comunicación: {formData.rating_communication}★</label>
-              <input
-                type="range"
-                min="1"
-                max="5"
-                className="w-full"
-                value={formData.rating_communication}
-                onChange={(e) => setFormData({...formData, rating_communication: parseInt(e.target.value)})}
-              />
-            </div>
 
-            <div>
-              <label className="text-sm">Claridad durante el proceso: {formData.rating_clarity}★</label>
-              <input
-                type="range"
-                min="1"
-                max="5"
-                className="w-full"
-                value={formData.rating_clarity}
-                onChange={(e) => setFormData({...formData, rating_clarity: parseInt(e.target.value)})}
-              />
-            </div>
+            <StarRatingInput
+              label="Comunicación"
+              value={formData.rating_communication}
+              onChange={(v) => setFormData({ ...formData, rating_communication: v })}
+            />
 
-            <div>
-              <label className="text-sm">Trato recibido: {formData.rating_respect}★</label>
-              <input
-                type="range"
-                min="1"
-                max="5"
-                className="w-full"
-                value={formData.rating_respect}
-                onChange={(e) => setFormData({...formData, rating_respect: parseInt(e.target.value)})}
-              />
-            </div>
+            <StarRatingInput
+              label="Claridad durante el proceso"
+              value={formData.rating_clarity}
+              onChange={(v) => setFormData({ ...formData, rating_clarity: v })}
+            />
+
+            <StarRatingInput
+              label="Trato recibido"
+              value={formData.rating_respect}
+              onChange={(v) => setFormData({ ...formData, rating_respect: v })}
+            />
           </div>
 
           {/* Comentario con validación anti-toxicidad */}
