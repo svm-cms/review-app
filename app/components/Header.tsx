@@ -17,10 +17,10 @@ export default function Header() {
           {/* Logo / Branding */}
           <Link href="/" className="flex items-center gap-2 group">
         
-            <span className="font-bold text-lg text-gray-800 group-hover:text-blue-600 transition">
+            <span className="font-bold text-lg text-gray-800 group-hover:text-sky-600 transition">
               Review Hiring
             </span>
-            <span className="hidden sm:inline text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+            <span className="hidden sm:inline text-xs bg-sky-100 text-sky-700 px-2 py-0.5 rounded-full">
               Beta
             </span>
           </Link>
@@ -31,8 +31,8 @@ export default function Header() {
               href="/"
               className={`text-sm font-medium transition ${
                 isActive('/') 
-                  ? 'text-blue-600' 
-                  : 'text-gray-600 hover:text-blue-600'
+                  ? 'text-sky-600' 
+                  : 'text-gray-600 hover:text-sky-600'
               }`}
             >
               Inicio
@@ -41,8 +41,8 @@ export default function Header() {
               href="/review/new"
               className={`text-sm font-medium transition ${
                 isActive('/review/new') 
-                  ? 'text-blue-600' 
-                  : 'text-gray-600 hover:text-blue-600'
+                  ? 'text-sky-600' 
+                  : 'text-gray-600 hover:text-sky-600'
               }`}
             >
               Compartir experiencia
@@ -51,8 +51,8 @@ export default function Header() {
               href="/ranking"
               className={`text-sm font-medium transition ${
                 isActive('/ranking')
-                  ? 'text-blue-600'
-                  : 'text-gray-600 hover:text-blue-600'
+                  ? 'text-sky-600'
+                  : 'text-gray-600 hover:text-sky-600'
               }`}
             >
               Ranking
@@ -61,8 +61,8 @@ export default function Header() {
               href="/privacy"
               className={`text-sm font-medium transition ${
                 isActive('/privacy') 
-                  ? 'text-blue-600' 
-                  : 'text-gray-600 hover:text-blue-600'
+                  ? 'text-sky-600' 
+                  : 'text-gray-600 hover:text-sky-600'
               }`}
             >
               Privacidad
@@ -99,7 +99,7 @@ export default function Header() {
               onClick={() => setIsMenuOpen(false)}
               className={`text-sm font-medium px-2 py-2 rounded-lg transition ${
                 isActive('/') 
-                  ? 'bg-blue-50 text-blue-600' 
+                  ? 'bg-sky-50 text-sky-600' 
                   : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
@@ -110,7 +110,7 @@ export default function Header() {
               onClick={() => setIsMenuOpen(false)}
               className={`text-sm font-medium px-2 py-2 rounded-lg transition ${
                 isActive('/review/new') 
-                  ? 'bg-blue-50 text-blue-600' 
+                  ? 'bg-sky-50 text-sky-600' 
                   : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
@@ -121,7 +121,7 @@ export default function Header() {
               onClick={() => setIsMenuOpen(false)}
               className={`text-sm font-medium px-2 py-2 rounded-lg transition ${
                 isActive('/ranking')
-                  ? 'bg-blue-50 text-blue-600'
+                  ? 'bg-sky-50 text-sky-600'
                   : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
@@ -132,7 +132,7 @@ export default function Header() {
               onClick={() => setIsMenuOpen(false)}
               className={`text-sm font-medium px-2 py-2 rounded-lg transition ${
                 isActive('/privacy') 
-                  ? 'bg-blue-50 text-blue-600' 
+                  ? 'bg-sky-50 text-sky-600' 
                   : 'text-gray-600 hover:bg-gray-50'
               }`}
             >

@@ -3,6 +3,24 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
+import {
+  Search,
+  BarChart3,
+  Star,
+  Mail,
+  MessageSquare,
+  RotateCcw,
+  Sparkles,
+  User,
+  Building2,
+  CheckCircle2,
+  Ban,
+  Handshake,
+  ArrowRight,
+  PenLine,
+  Clock,
+  Check,
+} from 'lucide-react'
 
 export default function Home() {
   const faqItems = [
@@ -102,8 +120,8 @@ export default function Home() {
   return (
     <>
       {/* Contenido principal */}
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-        <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12 md:py-16 pb-32 md:pb-16">
+      <div className="min-h-screen bg-gradient-to-b from-sky-50 to-white">
+        <div className="max-w-4xl mx-auto px-4 py-12 sm:py-16 md:py-20 pb-32 md:pb-20">
           {/* Hero */}
           <div className="text-center">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
@@ -126,7 +144,7 @@ export default function Home() {
                   value={searchTerm}
                   onChange={(e) => handleSearch(e.target.value)}
                   placeholder="Buscar empresa (ej: Glovo, Amazon, Inditex)"
-                  className="flex-1 px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none"
+                  className="flex-1 px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-200 rounded-xl focus:border-sky-500 focus:outline-none"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && suggestions.length > 0) {
                       handleSelectCompany(suggestions[0])
@@ -135,11 +153,12 @@ export default function Home() {
                 />
                 <Link
                   href={`/company/${encodeURIComponent(searchTerm)}`}
-                  className={`px-6 sm:px-8 py-3 sm:py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition text-center ${
+                  className={`px-6 sm:px-8 py-3 sm:py-4 bg-sky-600 text-white rounded-xl font-semibold hover:bg-sky-700 transition text-center inline-flex items-center justify-center gap-2 ${
                     !searchTerm ? 'opacity-50 pointer-events-none' : ''
                   }`}
                 >
-                  Buscar 🔍
+                  <Search className="w-5 h-5" strokeWidth={2} />
+                  Buscar
                 </Link>
               </div>
 
@@ -164,7 +183,7 @@ export default function Home() {
               href="/review/new"
               className="hidden md:inline-block px-8 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition"
             >
-              Compartir experiencia ✍️
+              Compartir experiencia
             </Link>
           </div>
 
@@ -172,37 +191,37 @@ export default function Home() {
           {/* un contador en cero mata la confianza en vez de generarla. */}
           {totalReviews >= 20 && (
             <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-3xl mx-auto">
-              <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-blue-600">{totalReviews}+</div>
+              <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-sky-600">{totalReviews}+</div>
                 <div className="text-sm sm:text-base text-gray-600">Experiencias compartidas</div>
               </div>
-              <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm text-center">
+              <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 text-center">
                 <div className="text-2xl sm:text-3xl font-bold text-red-600">{stats.noFeedback}</div>
                 <div className="text-sm sm:text-base text-gray-600">No recibieron feedback</div>
               </div>
-              <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-orange-600">{stats.ghosting}%</div>
+              <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-red-600">{stats.ghosting}%</div>
                 <div className="text-sm sm:text-base text-gray-600">Ghosteados</div>
               </div>
             </div>
           )}
 
           {/* Cómo funciona */}
-          <div className="mt-16 sm:mt-20">
+          <div className="mt-20 sm:mt-28">
             <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8">Cómo funciona</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
-              <div className="text-center">
-                <div className="text-3xl sm:text-4xl mb-3">🔍</div>
+              <div className="flex flex-col items-center text-center">
+                <Search className="w-8 h-8 sm:w-10 sm:h-10 mb-3 text-sky-600" strokeWidth={1.5} />
                 <h3 className="font-semibold mb-2 text-sm sm:text-base">Busca una empresa</h3>
                 <p className="text-sm sm:text-base text-gray-600">Consulta su historial antes de aplicar</p>
               </div>
-              <div className="text-center">
-                <div className="text-3xl sm:text-4xl mb-3">📊</div>
+              <div className="flex flex-col items-center text-center">
+                <BarChart3 className="w-8 h-8 sm:w-10 sm:h-10 mb-3 text-sky-600" strokeWidth={1.5} />
                 <h3 className="font-semibold mb-2 text-sm sm:text-base">Ve experiencias reales</h3>
                 <p className="text-sm sm:text-base text-gray-600">Datos estructurados, no opiniones</p>
               </div>
-              <div className="text-center">
-                <div className="text-3xl sm:text-4xl mb-3">✍️</div>
+              <div className="flex flex-col items-center text-center">
+                <PenLine className="w-8 h-8 sm:w-10 sm:h-10 mb-3 text-sky-600" strokeWidth={1.5} />
                 <h3 className="font-semibold mb-2 text-sm sm:text-base">Comparte la tuya</h3>
                 <p className="text-sm sm:text-base text-gray-600">En menos de 1 minuto</p>
               </div>
@@ -210,38 +229,38 @@ export default function Home() {
           </div>
 
           {/* Cómo se valora */}
-          <div className="mt-16 sm:mt-20">
+          <div className="mt-20 sm:mt-28">
             <h2 className="text-xl sm:text-2xl font-bold text-center mb-2">
-              ¿Cómo se valora un proceso? ⭐
+              ¿Cómo se valora un proceso?
             </h2>
             <p className="text-center text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-xl mx-auto">
               Esto no es una web para criticar empresas. El score combina 5 datos objetivos,
               cada uno con un peso distinto.
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
-              <div className="bg-white p-3 sm:p-4 rounded-xl shadow-sm text-center">
-                <div className="text-xl sm:text-2xl mb-1">📩</div>
-                <div className="font-bold text-blue-600 text-sm sm:text-base">25%</div>
+              <div className="flex flex-col items-center bg-white p-3 sm:p-4 rounded-xl border border-gray-200 text-center">
+                <Mail className="w-6 h-6 sm:w-7 sm:h-7 mb-1 text-sky-600" strokeWidth={1.5} />
+                <div className="font-bold text-sky-600 text-sm sm:text-base">25%</div>
                 <div className="text-xs sm:text-sm text-gray-600">Respuesta</div>
               </div>
-              <div className="bg-white p-3 sm:p-4 rounded-xl shadow-sm text-center">
-                <div className="text-xl sm:text-2xl mb-1">💬</div>
-                <div className="font-bold text-blue-600 text-sm sm:text-base">25%</div>
+              <div className="flex flex-col items-center bg-white p-3 sm:p-4 rounded-xl border border-gray-200 text-center">
+                <MessageSquare className="w-6 h-6 sm:w-7 sm:h-7 mb-1 text-sky-600" strokeWidth={1.5} />
+                <div className="font-bold text-sky-600 text-sm sm:text-base">25%</div>
                 <div className="text-xs sm:text-sm text-gray-600">Feedback</div>
               </div>
-              <div className="bg-white p-3 sm:p-4 rounded-xl shadow-sm text-center">
-                <div className="text-xl sm:text-2xl mb-1">🔄</div>
-                <div className="font-bold text-blue-600 text-sm sm:text-base">20%</div>
+              <div className="flex flex-col items-center bg-white p-3 sm:p-4 rounded-xl border border-gray-200 text-center">
+                <RotateCcw className="w-6 h-6 sm:w-7 sm:h-7 mb-1 text-sky-600" strokeWidth={1.5} />
+                <div className="font-bold text-sky-600 text-sm sm:text-base">20%</div>
                 <div className="text-xs sm:text-sm text-gray-600">Volvería a aplicar</div>
               </div>
-              <div className="bg-white p-3 sm:p-4 rounded-xl shadow-sm text-center">
-                <div className="text-xl sm:text-2xl mb-1">🌟</div>
-                <div className="font-bold text-blue-600 text-sm sm:text-base">20%</div>
+              <div className="flex flex-col items-center bg-white p-3 sm:p-4 rounded-xl border border-gray-200 text-center">
+                <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 mb-1 text-sky-600" strokeWidth={1.5} />
+                <div className="font-bold text-sky-600 text-sm sm:text-base">20%</div>
                 <div className="text-xs sm:text-sm text-gray-600">Valoraciones</div>
               </div>
-              <div className="bg-white p-3 sm:p-4 rounded-xl shadow-sm text-center">
-                <div className="text-xl sm:text-2xl mb-1">⏱️</div>
-                <div className="font-bold text-blue-600 text-sm sm:text-base">10%</div>
+              <div className="flex flex-col items-center bg-white p-3 sm:p-4 rounded-xl border border-gray-200 text-center">
+                <Clock className="w-6 h-6 sm:w-7 sm:h-7 mb-1 text-sky-600" strokeWidth={1.5} />
+                <div className="font-bold text-sky-600 text-sm sm:text-base">10%</div>
                 <div className="text-xs sm:text-sm text-gray-600">Duración</div>
               </div>
             </div>
@@ -251,57 +270,79 @@ export default function Home() {
           </div>
 
           {/* Para candidatos / Para empresas */}
-          <div className="mt-16 sm:mt-20 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white p-5 sm:p-6 rounded-xl shadow-sm">
-              <div className="text-2xl sm:text-3xl mb-2">👤</div>
+          <div className="mt-20 sm:mt-28 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200">
+              <User className="w-7 h-7 sm:w-8 sm:h-8 mb-2 text-sky-600" strokeWidth={1.5} />
               <h3 className="text-lg sm:text-xl font-bold mb-3">Para candidatos</h3>
               <ul className="space-y-2 text-sm sm:text-base text-gray-600">
-                <li>✓ Saber qué esperar antes de aplicar</li>
-                <li>✓ Comparar procesos entre empresas</li>
-                <li>✓ Compartir tu experiencia y ayudar a otros candidatos</li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 mt-1 text-sky-600 flex-shrink-0" strokeWidth={2} />
+                  Saber qué esperar antes de aplicar
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 mt-1 text-sky-600 flex-shrink-0" strokeWidth={2} />
+                  Comparar procesos entre empresas
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 mt-1 text-sky-600 flex-shrink-0" strokeWidth={2} />
+                  Compartir tu experiencia y ayudar a otros candidatos
+                </li>
               </ul>
             </div>
-            <div className="bg-white p-5 sm:p-6 rounded-xl shadow-sm">
-              <div className="text-2xl sm:text-3xl mb-2">🏢</div>
+            <div className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200">
+              <Building2 className="w-7 h-7 sm:w-8 sm:h-8 mb-2 text-sky-600" strokeWidth={1.5} />
               <h3 className="text-lg sm:text-xl font-bold mb-3">Para empresas</h3>
               <p className="text-sm sm:text-base text-gray-600 mb-3">
                 La transparencia también ayuda a las empresas a mejorar sus procesos de selección.
               </p>
               <ul className="space-y-2 text-sm sm:text-base text-gray-600">
-                <li>✓ Ver cómo perciben los candidatos su proceso de selección</li>
-                <li>✓ Detectar qué mejorar antes de que impacte en la marca empleadora</li>
-                <li className="text-gray-400">✓ Panel de analytics — próximamente</li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 mt-1 text-sky-600 flex-shrink-0" strokeWidth={2} />
+                  Ver cómo perciben los candidatos su proceso de selección
+                </li>
+                <li className="flex items-start gap-2">
+                  <Check className="w-4 h-4 mt-1 text-sky-600 flex-shrink-0" strokeWidth={2} />
+                  Detectar qué mejorar antes de que impacte en la marca empleadora
+                </li>
+                <li className="flex items-start gap-2 text-gray-400">
+                  <Check className="w-4 h-4 mt-1 flex-shrink-0" strokeWidth={2} />
+                  Panel de analytics — próximamente
+                </li>
               </ul>
             </div>
           </div>
 
           {/* Principios */}
-          <div className="mt-16 sm:mt-20">
+          <div className="mt-20 sm:mt-28">
             <h2 className="text-xl sm:text-2xl font-bold text-center mb-6">Nuestros principios</h2>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-              <span className="px-3 sm:px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-xs sm:text-sm font-medium">
-                📊 Datos antes que opiniones
+              <span className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-sky-50 text-sky-700 rounded-full text-xs sm:text-sm font-medium">
+                <BarChart3 className="w-4 h-4" strokeWidth={2} />
+                Datos antes que opiniones
               </span>
-              <span className="px-3 sm:px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-xs sm:text-sm font-medium">
-                ✅ Experiencias reales
+              <span className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-sky-50 text-sky-700 rounded-full text-xs sm:text-sm font-medium">
+                <CheckCircle2 className="w-4 h-4" strokeWidth={2} />
+                Experiencias reales
               </span>
-              <span className="px-3 sm:px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-xs sm:text-sm font-medium">
-                🚫 Sin ataques personales
+              <span className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-sky-50 text-sky-700 rounded-full text-xs sm:text-sm font-medium">
+                <Ban className="w-4 h-4" strokeWidth={2} />
+                Sin ataques personales
               </span>
-              <span className="px-3 sm:px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-xs sm:text-sm font-medium">
-                🤝 Transparencia para candidatos y empresas
+              <span className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-sky-50 text-sky-700 rounded-full text-xs sm:text-sm font-medium">
+                <Handshake className="w-4 h-4" strokeWidth={2} />
+                Transparencia para candidatos y empresas
               </span>
             </div>
           </div>
 
           {/* FAQ */}
-          <div className="mt-16 sm:mt-20 max-w-2xl mx-auto">
+          <div className="mt-20 sm:mt-28 max-w-2xl mx-auto">
             <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8">
               Preguntas frecuentes
             </h2>
             <div className="space-y-3">
               {faqItems.map((item) => (
-                <div key={item.question} className="bg-white p-4 sm:p-5 rounded-xl shadow-sm">
+                <div key={item.question} className="bg-white p-4 sm:p-5 rounded-xl border border-gray-200">
                   <h3 className="font-semibold text-sm sm:text-base mb-1.5">{item.question}</h3>
                   <p className="text-sm sm:text-base text-gray-600">{item.answer}</p>
                 </div>
@@ -329,12 +370,13 @@ export default function Home() {
           />
 
           {/* CTA final (visible en desktop) */}
-          <div className="mt-16 sm:mt-20 text-center hidden md:block">
+          <div className="mt-20 sm:mt-28 text-center hidden md:block">
             <Link
               href="/review/new"
-              className="inline-block px-10 sm:px-12 py-3 sm:py-4 bg-blue-600 text-white text-base sm:text-lg rounded-xl font-semibold hover:bg-blue-700 transition"
+              className="inline-flex items-center gap-2 px-10 sm:px-12 py-3 sm:py-4 bg-sky-600 text-white text-base sm:text-lg rounded-xl font-semibold hover:bg-sky-700 transition"
             >
-              👉 Comparte tu experiencia
+              Comparte tu experiencia
+              <ArrowRight className="w-5 h-5" strokeWidth={2} />
             </Link>
           </div>
         </div>
@@ -344,9 +386,10 @@ export default function Home() {
       <div className="fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 md:hidden">
         <Link
           href="/review/new"
-          className="bg-green-600 text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full shadow-lg font-semibold hover:bg-green-700 transition flex items-center gap-2 text-sm sm:text-base"
+          className="bg-sky-600 text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full shadow-lg font-semibold hover:bg-sky-700 transition flex items-center gap-2 text-sm sm:text-base"
         >
-          ✍️ Compartir experiencia
+          <PenLine className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={2} />
+          Compartir experiencia
         </Link>
       </div>
     </>

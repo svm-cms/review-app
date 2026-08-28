@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { Trophy, AlertTriangle } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
 import { rankCompanies, getScoreColor, MIN_REVIEWS_FOR_SCORE } from '@/lib/scoring'
 
@@ -26,7 +27,7 @@ export default async function RankingPage() {
   const bottom10 = [...rankings].reverse().slice(0, 10)
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 sm:py-12 px-4">
+    <div className="min-h-screen bg-gray-50 py-10 sm:py-16 px-4">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8 sm:mb-10">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3">
@@ -39,7 +40,7 @@ export default async function RankingPage() {
         </div>
 
         {rankings.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm p-8 sm:p-10 text-center">
+          <div className="bg-white rounded-xl border border-gray-200 p-8 sm:p-10 text-center">
             <p className="text-gray-600 mb-2">
               Todavía no hay suficientes datos para publicar un ranking.
             </p>
@@ -49,16 +50,17 @@ export default async function RankingPage() {
             </p>
             <Link
               href="/review/new"
-              className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+              className="inline-block px-6 py-2 bg-sky-600 text-white rounded-lg font-semibold hover:bg-sky-700 transition"
             >
               Sé el primero en compartir tu experiencia
             </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
-              <h2 className="text-lg font-bold text-green-700 mb-4">
-                🏆 Mejores procesos de selección
+            <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
+              <h2 className="flex items-center gap-2 text-lg font-bold text-green-700 mb-4">
+                <Trophy className="w-5 h-5" strokeWidth={2} />
+                Mejores procesos de selección
               </h2>
               <ol className="space-y-2">
                 {top10.map((r, i) => (
@@ -84,9 +86,10 @@ export default async function RankingPage() {
               </ol>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
-              <h2 className="text-lg font-bold text-red-700 mb-4">
-                ⚠️ Procesos que más fallan
+            <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
+              <h2 className="flex items-center gap-2 text-lg font-bold text-red-700 mb-4">
+                <AlertTriangle className="w-5 h-5" strokeWidth={2} />
+                Procesos que más fallan
               </h2>
               <ol className="space-y-2">
                 {bottom10.map((r, i) => (

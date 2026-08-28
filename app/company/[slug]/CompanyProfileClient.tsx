@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { Check, X, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
 import {
   calculateCompanyStats,
@@ -97,7 +98,7 @@ export default function CompanyProfileClient({ companyName }: { companyName: str
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600 mb-4"></div>
         <p className="text-gray-600 text-center">Cargando experiencias de {companyName}...</p>
       </div>
     )
@@ -108,7 +109,7 @@ export default function CompanyProfileClient({ companyName }: { companyName: str
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-xl text-red-600 mb-4">{error}</p>
-          <Link href="/" className="text-blue-600 hover:underline">
+          <Link href="/" className="text-sky-600 hover:underline">
             Volver al inicio
           </Link>
         </div>
@@ -117,10 +118,10 @@ export default function CompanyProfileClient({ companyName }: { companyName: str
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-6 sm:py-8 px-4">
+    <div className="min-h-screen bg-gray-50 py-10 sm:py-14 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header con score */}
-        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6">
+        <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-4">
               <ScoreCircle score={stats?.score ?? null} />
@@ -133,7 +134,7 @@ export default function CompanyProfileClient({ companyName }: { companyName: str
             </div>
             <Link
               href="/review/new"
-              className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition text-center text-sm sm:text-base whitespace-nowrap"
+              className="px-4 sm:px-6 py-2 bg-sky-600 text-white rounded-lg font-semibold hover:bg-sky-700 transition text-center text-sm sm:text-base whitespace-nowrap"
             >
               Compartir experiencia
             </Link>
@@ -150,8 +151,8 @@ export default function CompanyProfileClient({ companyName }: { companyName: str
           {/* Stats - KPIs visuales */}
           {stats && stats.totalReviews > 0 ? (
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-              <div className="bg-blue-50 p-3 sm:p-4 rounded-lg text-center">
-                <div className="text-xl sm:text-2xl font-bold text-blue-600">
+              <div className="bg-sky-50 p-3 sm:p-4 rounded-lg text-center">
+                <div className="text-xl sm:text-2xl font-bold text-sky-600">
                   {stats.responseRate}%
                 </div>
                 <div className="text-xs sm:text-sm text-gray-600">Respuesta recibida</div>
@@ -168,8 +169,8 @@ export default function CompanyProfileClient({ companyName }: { companyName: str
                 </div>
                 <div className="text-xs sm:text-sm text-gray-600">Ghosting</div>
               </div>
-              <div className="bg-purple-50 p-3 sm:p-4 rounded-lg text-center">
-                <div className="text-sm sm:text-xl font-bold text-purple-600">
+              <div className="bg-gray-50 p-3 sm:p-4 rounded-lg text-center">
+                <div className="text-sm sm:text-xl font-bold text-gray-700">
                   {stats.commonDuration}
                 </div>
                 <div className="text-xs sm:text-sm text-gray-600">Duración más común</div>
@@ -182,7 +183,7 @@ export default function CompanyProfileClient({ companyName }: { companyName: str
               </p>
               <Link
                 href="/review/new"
-                className="inline-block mt-3 px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition text-sm sm:text-base"
+                className="inline-block mt-3 px-4 sm:px-6 py-2 bg-sky-600 text-white rounded-lg font-semibold hover:bg-sky-700 transition text-sm sm:text-base"
               >
                 Sé el primero en compartir tu experiencia
               </Link>
@@ -199,7 +200,7 @@ export default function CompanyProfileClient({ companyName }: { companyName: str
 
         {/* Ratings breakdown */}
         {stats && stats.totalReviews > 0 && (
-          <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6">
+          <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 mb-6">
             <h2 className="text-base sm:text-lg font-semibold mb-4">Valoración media</h2>
             <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
               <div>
@@ -229,12 +230,12 @@ export default function CompanyProfileClient({ companyName }: { companyName: str
           <h2 className="text-lg sm:text-xl font-bold">Experiencias recientes</h2>
 
           {reviews.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm p-6 sm:p-8 text-center text-gray-500 text-sm sm:text-base">
+            <div className="bg-white rounded-xl border border-gray-200 p-6 sm:p-8 text-center text-gray-500 text-sm sm:text-base">
               No hay experiencias para mostrar
             </div>
           ) : (
             reviews.map((review) => (
-              <div key={review.id} className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+              <div key={review.id} className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-base sm:text-lg break-words">
@@ -266,22 +267,32 @@ export default function CompanyProfileClient({ companyName }: { companyName: str
 
                 <div className="mt-3 flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm">
                   <span
-                    className={`px-2 py-1 rounded-full ${
+                    className={`inline-flex items-center gap-1 px-2 py-1 rounded-full ${
                       review.received_response
                         ? 'bg-green-100 text-green-700'
                         : 'bg-red-100 text-red-700'
                     }`}
                   >
-                    {review.received_response ? '✔ Respuesta' : '✖ Sin respuesta'}
+                    {review.received_response ? (
+                      <Check className="w-3.5 h-3.5" strokeWidth={2.5} />
+                    ) : (
+                      <X className="w-3.5 h-3.5" strokeWidth={2.5} />
+                    )}
+                    {review.received_response ? 'Respuesta' : 'Sin respuesta'}
                   </span>
                   <span
-                    className={`px-2 py-1 rounded-full ${
+                    className={`inline-flex items-center gap-1 px-2 py-1 rounded-full ${
                       review.received_feedback
                         ? 'bg-green-100 text-green-700'
                         : 'bg-red-100 text-red-700'
                     }`}
                   >
-                    {review.received_feedback ? '✔ Feedback' : '✖ Sin feedback'}
+                    {review.received_feedback ? (
+                      <Check className="w-3.5 h-3.5" strokeWidth={2.5} />
+                    ) : (
+                      <X className="w-3.5 h-3.5" strokeWidth={2.5} />
+                    )}
+                    {review.received_feedback ? 'Feedback' : 'Sin feedback'}
                   </span>
                   <span className="px-2 py-1 bg-gray-100 rounded-full">
                     {review.interview_count === 4 ? '4+' : review.interview_count}{' '}
@@ -291,13 +302,18 @@ export default function CompanyProfileClient({ companyName }: { companyName: str
                     {review.process_duration}
                   </span>
                   <span
-                    className={`px-2 py-1 rounded-full ${
+                    className={`inline-flex items-center gap-1 px-2 py-1 rounded-full ${
                       review.would_reapply
                         ? 'bg-green-100 text-green-700'
                         : 'bg-red-100 text-red-700'
                     }`}
                   >
-                    {review.would_reapply ? '👍 Volvería a aplicar' : '👎 No volvería a aplicar'}
+                    {review.would_reapply ? (
+                      <ThumbsUp className="w-3.5 h-3.5" strokeWidth={2} />
+                    ) : (
+                      <ThumbsDown className="w-3.5 h-3.5" strokeWidth={2} />
+                    )}
+                    {review.would_reapply ? 'Volvería a aplicar' : 'No volvería a aplicar'}
                   </span>
                 </div>
 

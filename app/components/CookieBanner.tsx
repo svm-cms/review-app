@@ -28,13 +28,13 @@ export default function CookieBanner() {
       <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
         <p className="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
           🍪 Usamos cookies para mejorar tu experiencia. 
-          <Link href="/privacy" className="text-blue-600 hover:underline ml-1">
+          <Link href="/privacy" className="text-sky-600 hover:underline ml-1">
             Más info
           </Link>
         </p>
         <button
           onClick={acceptCookies}
-          className="bg-blue-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold hover:bg-blue-700 transition whitespace-nowrap text-sm sm:text-base"
+          className="bg-sky-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold hover:bg-sky-700 transition whitespace-nowrap text-sm sm:text-base"
         >
           Aceptar
         </button>

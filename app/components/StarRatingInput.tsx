@@ -28,7 +28,7 @@ export default function StarRatingInput({ label, value, onChange }: StarRatingIn
             onClick={() => onChange(star)}
             onMouseEnter={() => setHoverValue(star)}
             aria-label={`${label}: ${star} de 5 estrellas`}
-            className="text-3xl leading-none transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded"
+            className="text-3xl leading-none transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-sky-400 rounded"
           >
             <span className={star <= displayValue ? 'text-yellow-400' : 'text-gray-300'}>★</span>
           </button>

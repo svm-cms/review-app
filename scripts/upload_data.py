@@ -1,7 +1,7 @@
 import pandas as pd
 import json
-from supabase import create_client
 import os
+from supabase import create_client
 from dotenv import load_dotenv
 
 # Cargar variables de entorno
@@ -17,7 +17,6 @@ def clean_company_name(name):
     """Limpiar nombre de empresa"""
     if pd.isna(name) or name == '':
         return None
-    # Eliminar espacios extra y caracteres especiales
     name = str(name).strip()
     return name
 
@@ -27,7 +26,6 @@ def extract_locations(matched_locations):
         return []
     try:
         if isinstance(matched_locations, str):
-            # Intentar parsear JSON si es string
             locations = json.loads(matched_locations)
             if isinstance(locations, str):
                 return [locations]
@@ -42,9 +40,8 @@ def extract_locations(matched_locations):
 def upload_companies():
     """Subir empresas a la tabla companies"""
     # Leer el archivo Excel
-    df = pd.read_excel('empresas.xlsx')  # Cambia por tu nombre de archivo
+    df = pd.read_excel('empresas.xlsx')
     
-    # Limpiar y preparar datos de empresas
     companies = []
     for idx, row in df.iterrows():
         company_name = clean_company_name(row['organization'])
@@ -71,8 +68,7 @@ def upload_companies():
             print(f'❌ Error subiendo empresas: {e}')
 
 def upload_reviews():
-    """Subir reviews (experiencias) a la tabla reviews"""
-    # Leer el archivo Excel
+    """Subir reviews a la tabla reviews"""
     df = pd.read_excel('empresas.xlsx')
     
     reviews = []
@@ -81,30 +77,27 @@ def upload_reviews():
         title = row.get('title', '')
         
         if company_name and title:
-            # Extraer ubicaciones
             locations = extract_locations(row.get('matched_locations'))
             main_location = locations[0] if locations else 'España'
             
-            # Crear review con datos estructurados
             review = {
                 'company': company_name,
                 'position': title,
-                'process_type': 'online',  # Valor por defecto
-                'received_response': False,  # Valor por defecto
-                'interview_count': 1,  # Valor por defecto
-                'received_feedback': False,  # Valor por defecto
-                'process_duration': '<1 semana',  # Valor por defecto
-                'rating_communication': 3,  # Valor por defecto
-                'rating_clarity': 3,  # Valor por defecto
-                'rating_respect': 3,  # Valor por defecto
-                'would_reapply': True,  # Valor por defecto
+                'process_type': 'online',
+                'received_response': False,
+                'interview_count': 1,
+                'received_feedback': False,
+                'process_duration': '<1 semana',
+                'rating_communication': 3,
+                'rating_clarity': 3,
+                'rating_respect': 3,
+                'would_reapply': True,
                 'improvement_text': f'Ubicación: {main_location}'
             }
             reviews.append(review)
     
     print(f'📊 Preparadas {len(reviews)} reviews')
     
-    # Subir a Supabase en lotes de 50
     batch_size = 50
     for i in range(0, len(reviews), batch_size):
         batch = reviews[i:i+batch_size]
@@ -115,6 +108,13 @@ def upload_reviews():
             print(f'❌ Error subiendo reviews: {e}')
 
 if __name__ == '__main__':
+    # Verificar que el archivo existe
+    if not os.path.exists('empresas.xlsx'):
+        print('❌ Error: No encuentro el archivo "empresas.xlsx"')
+        print('📁 Asegúrate de que el archivo está en la carpeta actual:')
+        print(f'   {os.getcwd()}')
+        exit()
+    
     print('🚀 Comenzando subida de datos...')
     upload_companies()
     upload_reviews()

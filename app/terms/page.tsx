@@ -3,8 +3,8 @@ import Link from 'next/link'
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-sm p-8">
-        <Link href="/" className="text-blue-600 hover:underline mb-6 inline-block">
+      <div className="max-w-3xl mx-auto bg-white rounded-xl border border-gray-200 p-8">
+        <Link href="/" className="text-sky-600 hover:underline mb-6 inline-block">
           ← Volver al inicio
         </Link>
 
@@ -46,7 +46,7 @@ export default function TermsPage() {
             encriptado antes de guardarse — nunca se publica ni se conserva en texto plano. Su
             único uso es evitar reviews duplicadas o falsas sobre la misma empresa. Más detalle en
             nuestra{' '}
-            <Link href="/privacy" className="text-blue-600 hover:underline">
+            <Link href="/privacy" className="text-sky-600 hover:underline">
               Política de Privacidad
             </Link>
             .

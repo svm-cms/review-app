@@ -209,7 +209,7 @@ export default function NewReviewPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-sm p-6">
+      <div className="max-w-2xl mx-auto bg-white rounded-xl border border-gray-200 p-6">
         <h1 className="text-2xl font-bold mb-6">Compartir experiencia</h1>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -311,7 +311,7 @@ export default function NewReviewPage() {
                   onClick={() => setFormData({ ...formData, interview_count: n })}
                   className={`flex-1 py-2 rounded-lg border font-medium transition ${
                     formData.interview_count === n
-                      ? 'bg-blue-600 text-white border-blue-600'
+                      ? 'bg-sky-600 text-white border-sky-600'
                       : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
                   }`}
                 >
@@ -499,7 +499,7 @@ export default function NewReviewPage() {
               <span>
                 Acepto que mi email se use exclusivamente para prevenir spam, tal y como se
                 describe en la{' '}
-                <a href="/privacy" target="_blank" className="text-blue-600 hover:underline">
+                <a href="/privacy" target="_blank" className="text-sky-600 hover:underline">
                   Política de Privacidad
                 </a>
                 . No se publicará ni se compartirá con nadie. *
@@ -547,7 +547,7 @@ export default function NewReviewPage() {
 
           <p className="text-xs text-gray-500 text-center">
             Al publicar, aceptas nuestros{' '}
-            <a href="/terms" target="_blank" className="text-blue-600 hover:underline">
+            <a href="/terms" target="_blank" className="text-sky-600 hover:underline">
               Términos de Servicio
             </a>
             . Solo hechos verificables — nada de insultos ni acusaciones.
@@ -556,7 +556,7 @@ export default function NewReviewPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 transition"
+            className="w-full bg-sky-600 text-white py-3 rounded-lg font-semibold hover:bg-sky-700 disabled:opacity-50 transition"
           >
             {isSubmitting ? 'Publicando...' : 'Publicar experiencia'}
           </button>
