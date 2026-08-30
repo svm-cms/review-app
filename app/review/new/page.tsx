@@ -8,6 +8,7 @@ import { resolveCanonicalCompanyName } from '@/lib/companies'
 import { hashEmail, isValidEmailFormat } from '@/lib/emailHash'
 import { checkSpamCooldown, recordVerification } from '@/lib/antiSpam'
 import StarRatingInput from '@/app/components/StarRatingInput'
+import { searchJobTitleSuggestions, type JobTitleSuggestion } from '@/lib/jobTitles'
 
 // ============================================
 // VALIDACIÓN ANTI-TOXICIDAD (FUERA DEL COMPONENTE)
@@ -51,6 +52,7 @@ export default function NewReviewPage() {
   const router = useRouter()
   
   const [companySuggestions, setCompanySuggestions] = useState<string[]>([])
+  const [positionSuggestions, setPositionSuggestions] = useState<JobTitleSuggestion[]>([])
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const [captchaError, setCaptchaError] = useState(false)
   const [textError, setTextError] = useState<string | null>(null)
@@ -89,6 +91,11 @@ export default function NewReviewPage() {
     } else {
       setCompanySuggestions([])
     }
+  }
+
+  const handlePositionSearch = async (value: string) => {
+    setFormData({ ...formData, position: value })
+    setPositionSuggestions(await searchJobTitleSuggestions(value))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -244,17 +251,36 @@ export default function NewReviewPage() {
             )}
           </div>
 
-          {/* Puesto */}
-          <div>
+          {/* Puesto con autocomplete */}
+          <div className="relative">
             <label className="block text-sm font-medium mb-1">Puesto *</label>
             <input
               type="text"
               required
               className="w-full px-4 py-2 border rounded-lg"
               value={formData.position}
-              onChange={(e) => setFormData({...formData, position: e.target.value})}
-              placeholder="Ej: Product Manager"
+              onChange={(e) => handlePositionSearch(e.target.value)}
+              placeholder="Ej: Project Manager, Jefe de Proyecto..."
             />
+
+            {positionSuggestions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-lg shadow-lg z-10">
+                {positionSuggestions.map((suggestion) => (
+                  <button
+                    key={suggestion.normalizedTitle}
+                    type="button"
+                    onClick={() => {
+                      setFormData({ ...formData, position: suggestion.normalizedTitle })
+                      setPositionSuggestions([])
+                    }}
+                    className="w-full px-4 py-2 text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg"
+                  >
+                    <div className="font-medium">{suggestion.normalizedTitle}</div>
+                    <div className="text-xs text-gray-500">{suggestion.family}</div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Tipo de proceso */}

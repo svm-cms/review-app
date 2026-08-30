@@ -16,11 +16,9 @@ export default function StarRatingInput({ label, value, onChange }: StarRatingIn
   const displayValue = hoverValue ?? value
 
   return (
-    <div>
-      <label className="text-sm block mb-1">
-        {label}: {value}★
-      </label>
-      <div className="flex gap-1" onMouseLeave={() => setHoverValue(null)}>
+    <div className="flex flex-col items-center gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+      <label className="text-sm text-center sm:text-left">{label}</label>
+      <div className="flex gap-1 justify-center" onMouseLeave={() => setHoverValue(null)}>
         {[1, 2, 3, 4, 5].map((star) => (
           <button
             key={star}
